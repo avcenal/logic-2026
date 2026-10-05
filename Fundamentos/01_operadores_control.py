@@ -57,11 +57,11 @@ while True:
         break
         
 if user_number > 5:
-    print(f"tu número {user_number} es mayor que cinco")
+    print(f"tu número, {user_number}, es mayor que 5")
 elif user_number == 5:
     print(f"Tu número es 5")
 else:
-    print(f"Tu número {user_number} es menor que 5")
+    print(f"Tu número, {user_number}, es menor que 5")
 
 #DIFICULTAD EXTRA
 for number in range(10,56):
