@@ -82,20 +82,92 @@ class Contact:
     def print_contact(self):
         print(f"- Nombre: {self.details["name"]}\n- Teléfono: {self.details["phone"]}")
 
+    def get_contact_name(self):
+        return self.details["name"]
+
 class Agenda:
     def __init__(self):
         self.__contacts = []
 
-    def include_contact(self, contact: Contact):
+    def __find_contact_index(self, name:str):
+        return self.__contacts.index((list(filter(lambda x: x.get_contact_name() == name, self.__contacts)))[0])
+        #return self.__contacts.index((list(filter(lambda x: x["name"] == name, self.__contacts)))[0])
+    
+    def add_new_contact(self, contact: Contact):
         self.__contacts.append(contact)
+
+    def get_number_of_contacts(self):
+        return len(self.__contacts)
+    
+    def find_contact(self, name:str):
+        __contact_index = self.__find_contact_index(name)
+        self.__contacts[__contact_index].print_contact()
+
+    def delete_contact(self,name: str):
+        __contact_index = self.__find_contact_index(name)
+        self.__contacts.pop(__contact_index)
+
+    def update_contact(self,name:str, phone:str):
+        __contact_index = self.__find_contact_index(name)
+        self.__contacts[__contact_index].update(Contact(name, phone))
 
     def print_agenda(self):
         for element in self.__contacts:
             element.print_contact()
+            print("\n")
 
-name = "Alex"
-phone = "+32123456789"
-one_contact = Contact(name, phone)
+def show_full_agenda(agenda: Agenda):
+    if agenda.get_number_of_contacts() != 0:
+        print(f"La agenda tiene un total de {agenda.get_number_of_contacts()} contactos")
+        option = input("¿Quieres mostrarla completa? (S/N): ").upper()
+        print("\n")
+        match option:
+            case "S":
+                agenda.print_agenda()
+            case "N":
+                print("Ok, volvamos a las opciones anteriores\n")
+    else:
+        print("Esta agenda no tiene aún ningún contacto guardado...\n")
+
+def add_new_contact(agenda: Agenda):
+    name = input("Dime el nombre del contacto: ")
+    phone = input("Dime el teléfono del contacto: ")
+    agenda.add_new_contact(Contact(name,phone))
+
+def find_contact(agenda: Agenda):
+    name = input ("Ok, dime el nombre que quieres buscar en la agenda: ").title()
+    try:
+        agenda.find_contact(name)
+    except IndexError as e:
+        print(f"El contacto no se encuentra en la agenda. Error: {e}")
+    except:
+        print(f"Ha ocurrido un error. Error: {e}")
+    print("\n")
+
+
+print("##################################################")
+print("Te doy la bienvenida al sistema de Agenda de avcenal.dev")
 my_agenda = Agenda()
-my_agenda.include_contact(one_contact)
-my_agenda.print_agenda()
+option = ""
+
+while option != "S":
+    print("Opciones:\n\n- Mostrar Agenda Completa (M)\n- Nuevo contacto (N)\n- Buscar contacto (F)\n- Actualizar contacto (U)\n- Borrar contacto (E)\n- Salir (S)\n\n")
+    option = input("¿Que quieres hacer? Introduce tu opción: ").upper()
+    print("\n")
+    match option:
+        case "M":
+            show_full_agenda(my_agenda)
+        case "N":
+            add_new_contact(my_agenda)
+        case "F":
+            find_contact(my_agenda)
+        case "U":
+            pass
+        case "E":
+            pass
+        case "S":
+            break
+        case _:
+            print("Tu opción no es válida, probemos de nuevo...\n")
+
+print("Gracias por utilizar este sistema de agenda. ¡Hasta pronto!")
