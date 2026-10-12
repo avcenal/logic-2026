@@ -73,6 +73,7 @@ print(my_dict_value)
 * - También se debe proponer una operación de finalización del programa.
 """
 from time import sleep
+import re
 
 class Contact:
     def __init__(self, name:str, phone:str):
@@ -122,6 +123,13 @@ class Agenda:
             element.print_contact()
             print("\n")
 
+def phone_checker(phone: str):
+    PHONE_PATTERN = r"\+[0-9]{11}"
+    while len(re.findall(PHONE_PATTERN,phone)) == 0:
+        phone = input("Parece que el teléfono no tiene un formato adecuado, prueba de nuevo: ")
+
+    return phone
+
 def contact_already_exist(agenda: Agenda, contact: Contact):
     try:
         agenda.find_contact(contact.get_contact_name())
@@ -147,7 +155,7 @@ def add_new_contact(agenda: Agenda, contact: Contact):
     option = ""
     if contact_already_exist(agenda, contact): #si el contacto existe, lo actualizará
         print(f"El contacto de {contact.get_contact_name()} ya existe en la agenda:")
-        index = agenda.find_contact(contact.get_contact_name())
+        #index = agenda.find_contact(contact.get_contact_name())
         #agenda.show_contact(index)
         option = input(f"¿quieres actualizarlo? (S/N): ").upper()
         while option != "N":
@@ -183,6 +191,7 @@ def update_contact(agenda: Agenda, name: str, phone: str = None):
                 case "S":
                     if phone == None:
                         phone = input("Dime el teléfono del contacto: ")
+                        phone = phone_checker(phone)
                     add_new_contact(agenda, Contact(name, phone))
                     break
                 case "N":
@@ -194,6 +203,7 @@ def update_contact(agenda: Agenda, name: str, phone: str = None):
         agenda.show_contact(index)
         if phone == None:
             phone = input(f"Dime el nuevo teléfono: ")
+            phone = phone_checker(phone)
         print("Actualizando contacto...")
         sleep(2)
         agenda.update_contact(Contact(name, phone))
@@ -205,7 +215,7 @@ def delete_contact(agenda: Agenda, name: str):
     except:
         print("El contacto no ha sido encontrado")
     else:
-        option = input("¿Seguro que quieres borrar este contacto?(S/N): ")
+        option = input("¿Seguro que quieres borrar este contacto?(S/N): ").upper()
         while option != "N":
             match option:
                 case "S":
@@ -232,6 +242,7 @@ while option != "S":
         case "N":
             name = input("Perfecto, dime el nombre del contacto que quieres añadir: ").title()
             phone = input("Y ahora el teléfono de este nuevo contacto: ")
+            phone = phone_checker(phone)
             add_new_contact(my_agenda, Contact(name, phone))
         case "F":
             name = input ("Ok, dime el nombre que quieres buscar en la agenda: ").title()
