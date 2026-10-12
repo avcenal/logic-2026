@@ -119,12 +119,13 @@ class Agenda:
         self.__contacts[__contact_index].update_contact(contact)
 
     def print_agenda(self):
-        for element in self.__contacts:
+        for index, element in enumerate(self.__contacts):
+            print(f"Contacto {index+1}:")
             element.print_contact()
             print("\n")
 
 def phone_checker(phone: str):
-    PHONE_PATTERN = r"\+[0-9]{11}"
+    PHONE_PATTERN = r"\+[0-9]{11}" #el patrón admite números con un "+" y el prefijo de país: +34123456789
     while len(re.findall(PHONE_PATTERN,phone)) == 0:
         phone = input("Parece que el teléfono no tiene un formato adecuado, prueba de nuevo: ")
 
@@ -155,8 +156,6 @@ def add_new_contact(agenda: Agenda, contact: Contact):
     option = ""
     if contact_already_exist(agenda, contact): #si el contacto existe, lo actualizará
         print(f"El contacto de {contact.get_contact_name()} ya existe en la agenda:")
-        #index = agenda.find_contact(contact.get_contact_name())
-        #agenda.show_contact(index)
         option = input(f"¿quieres actualizarlo? (S/N): ").upper()
         while option != "N":
             match option:
@@ -188,8 +187,8 @@ def update_contact(agenda: Agenda, name: str, phone: str = None):
         option = input("El contacto no existe en la agenda, ¿Quieres añadirlo? (S/N): ").upper()
         while option != "N":
             match option:
-                case "S":
-                    if phone == None:
+                case "S": #se podría incluir código para dar a elegir actualizar el nombre o el teléfono
+                    if phone == None: #en este ejercicio asumo que solo se actualizará el teléfono
                         phone = input("Dime el teléfono del contacto: ")
                         phone = phone_checker(phone)
                     add_new_contact(agenda, Contact(name, phone))
@@ -258,4 +257,4 @@ while option != "S":
         case _:
             print("Tu opción no es válida, probemos de nuevo...\n")
 
-print("Gracias por utilizar este sistema de agenda. ¡Hasta pronto!")
+print("Gracias por utilizar este sistema de agenda. ¡Hasta pronto!\n")
