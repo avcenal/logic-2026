@@ -72,6 +72,8 @@ print(my_dict_value)
 * (o el número de dígitos que quieras)
 * - También se debe proponer una operación de finalización del programa.
 """
+from time import sleep
+
 class Contact:
     def __init__(self, name:str, phone:str):
         self.details = {
@@ -85,36 +87,48 @@ class Contact:
     def get_contact_name(self):
         return self.details["name"]
 
+    def get_contact_phone(self):
+        return self.details["phone"]
+
+    def update_contact(self, contact: Contact):
+        return self.details.update({"name":contact.get_contact_name(), "phone": contact.get_contact_phone()})
+
 class Agenda:
     def __init__(self):
         self.__contacts = []
 
-    def __find_contact_index(self, name:str):
+    def find_contact(self, name:str):
         return self.__contacts.index((list(filter(lambda x: x.get_contact_name() == name, self.__contacts)))[0])
-        #return self.__contacts.index((list(filter(lambda x: x["name"] == name, self.__contacts)))[0])
     
     def add_new_contact(self, contact: Contact):
         self.__contacts.append(contact)
 
     def get_number_of_contacts(self):
         return len(self.__contacts)
-    
-    def find_contact(self, name:str):
-        __contact_index = self.__find_contact_index(name)
-        self.__contacts[__contact_index].print_contact()
+
+    def show_contact(self, index:int):
+        self.__contacts[index].print_contact()
 
     def delete_contact(self,name: str):
-        __contact_index = self.__find_contact_index(name)
+        __contact_index = self.find_contact(name)
         self.__contacts.pop(__contact_index)
 
-    def update_contact(self,name:str, phone:str):
-        __contact_index = self.__find_contact_index(name)
-        self.__contacts[__contact_index].update(Contact(name, phone))
+    def update_contact(self,contact:Contact):
+        __contact_index = self.find_contact(contact.get_contact_name())
+        self.__contacts[__contact_index].update_contact(contact)
 
     def print_agenda(self):
         for element in self.__contacts:
             element.print_contact()
             print("\n")
+
+def contact_already_exist(agenda: Agenda, contact: Contact):
+    try:
+        agenda.find_contact(contact.get_contact_name())
+    except:
+        return False
+    else:
+        return True
 
 def show_full_agenda(agenda: Agenda):
     if agenda.get_number_of_contacts() != 0:
@@ -129,21 +143,79 @@ def show_full_agenda(agenda: Agenda):
     else:
         print("Esta agenda no tiene aún ningún contacto guardado...\n")
 
-def add_new_contact(agenda: Agenda):
-    name = input("Dime el nombre del contacto: ")
-    phone = input("Dime el teléfono del contacto: ")
-    agenda.add_new_contact(Contact(name,phone))
+def add_new_contact(agenda: Agenda, contact: Contact):
+    option = ""
+    if contact_already_exist(agenda, contact): #si el contacto existe, lo actualizará
+        print(f"El contacto de {contact.get_contact_name()} ya existe en la agenda:")
+        index = agenda.find_contact(contact.get_contact_name())
+        #agenda.show_contact(index)
+        option = input(f"¿quieres actualizarlo? (S/N): ").upper()
+        while option != "N":
+            match option:
+                case "S":
+                    update_contact(agenda, contact.get_contact_name(), contact.get_contact_phone())
+                    break
+                case "N":
+                    break
+                case _:
+                    option = input(f"Tu opción no es válida, ¿quieres actualizar el contacto de {name}?(S/N): ")
+                    print("\n")
+    else:
+        agenda.add_new_contact(contact) #si no existe lo crea
 
-def find_contact(agenda: Agenda):
-    name = input ("Ok, dime el nombre que quieres buscar en la agenda: ").title()
+def find_contact(agenda: Agenda, name: str):
     try:
-        agenda.find_contact(name)
+        index = agenda.find_contact(name)
+        agenda.show_contact(index)
     except IndexError as e:
         print(f"El contacto no se encuentra en la agenda. Error: {e}")
     except:
         print(f"Ha ocurrido un error. Error: {e}")
     print("\n")
 
+def update_contact(agenda: Agenda, name: str, phone: str = None):
+    try:
+        index = agenda.find_contact(name)
+    except:
+        option = input("El contacto no existe en la agenda, ¿Quieres añadirlo? (S/N): ").upper()
+        while option != "N":
+            match option:
+                case "S":
+                    if phone == None:
+                        phone = input("Dime el teléfono del contacto: ")
+                    add_new_contact(agenda, Contact(name, phone))
+                    break
+                case "N":
+                    break
+                case _:
+                    option = input(f"Tu opción no es válida. ¿Quieres añadir a {name} como nuevo contacto?(S/N): ")
+    else:
+        print("Datos actuales del contacto:")
+        agenda.show_contact(index)
+        if phone == None:
+            phone = input(f"Dime el nuevo teléfono: ")
+        print("Actualizando contacto...")
+        sleep(2)
+        agenda.update_contact(Contact(name, phone))
+        print("¡Contacto actualizado!\n")
+
+def delete_contact(agenda: Agenda, name: str):
+    try:
+        find_contact(agenda, name)
+    except:
+        print("El contacto no ha sido encontrado")
+    else:
+        option = input("¿Seguro que quieres borrar este contacto?(S/N): ")
+        while option != "N":
+            match option:
+                case "S":
+                    agenda.delete_contact(name)
+                    print("Contacto borrado\n")
+                    break
+                case "N":
+                    break
+                case _:
+                    option = input(f"Tu opción no es válida. ¿Quieres borrar el contacto de {name}?(S/N): ")
 
 print("##################################################")
 print("Te doy la bienvenida al sistema de Agenda de avcenal.dev")
@@ -158,13 +230,18 @@ while option != "S":
         case "M":
             show_full_agenda(my_agenda)
         case "N":
-            add_new_contact(my_agenda)
+            name = input("Perfecto, dime el nombre del contacto que quieres añadir: ").title()
+            phone = input("Y ahora el teléfono de este nuevo contacto: ")
+            add_new_contact(my_agenda, Contact(name, phone))
         case "F":
-            find_contact(my_agenda)
+            name = input ("Ok, dime el nombre que quieres buscar en la agenda: ").title()
+            find_contact(my_agenda, name)
         case "U":
-            pass
+            name = input ("Entendido, dime el nombre del contacto que quieres actualizar: ").title()
+            update_contact(my_agenda, name)
         case "E":
-            pass
+            name = input ("Adelante, dime el nombre del contacto que quieres borrar: ").title()
+            delete_contact(my_agenda, name)
         case "S":
             break
         case _:
