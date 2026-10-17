@@ -51,3 +51,63 @@ print("Hello\tPython")
 * - Anagramas
 * - Isogramas
 """
+def is_palindrome(word:str):
+    return(word.lower() == word[::-1].lower())
+
+def letters_in_set(word:str):
+    letters_set = set()
+    for letter in word:
+        letters_set.add(letter)
+    return letters_set
+    
+def are_anagrams(word_one: str, word_two: str):
+    if len(word_one) == len(word_two):
+        word_one_letters = letters_in_set(word_one.lower())
+        word_two_letters = letters_in_set(word_two.lower())
+        if (len(word_one_letters.difference(word_two_letters))==0):
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def is_isogram(word: str):
+    word = word.lower()
+    limit = word.count(word[0])
+    for letter in word[1::]:
+        if word.count(letter) != limit:
+            return False
+    return True
+
+def check_words(word_one:str, word_two:str):
+    summary = ""
+    if is_palindrome(word_one) and is_palindrome(word_two):
+        summary = f"{word_one} y {word_two} son palíndromos\n"
+    elif not is_palindrome(word_one) and is_palindrome(word_two):
+        summary = f"{word_one} no es un palíndromo y {word_two} si lo es\n"
+    elif is_palindrome(word_one) and not is_palindrome(word_two):
+            summary = f"{word_one} es un palíndromo y {word_two} no lo es\n"
+    else:
+        summary = f"Ni {word_one} ni {word_two} son palíndromos\n"
+
+    if are_anagrams(word_one,word_two):
+        summary += "Si son anagramas\n"
+    else:
+        summary += "No son anagramas\n"
+
+    if is_isogram(word_one) and is_isogram(word_two):
+        summary += f"{word_one} y {word_two} son isogramas"
+    elif not is_isogram(word_one) and is_isogram(word_two):
+        summary += f"{word_one} no es un isograma y {word_two} si lo es"
+    elif is_isogram(word_one) and not is_isogram(word_two):
+        summary += f"{word_one} es un isograma y {word_two} no lo es"
+    else:
+        summary += f"Ni {word_one} ni {word_two} son isogramas"
+
+    print(summary)
+
+check_words("Oso", "oso")
+check_words("arroz", "rozar")
+check_words("pelo", "gato")
+check_words("anona", "AnonA")
+check_words("perla", "Paler")
