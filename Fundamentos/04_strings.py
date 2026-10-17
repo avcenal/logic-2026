@@ -53,18 +53,10 @@ print("Hello\tPython")
 """
 def is_palindrome(word:str):
     return(word.lower() == word[::-1].lower())
-
-def letters_in_set(word:str):
-    letters_set = set()
-    for letter in word:
-        letters_set.add(letter)
-    return letters_set
     
 def are_anagrams(word_one: str, word_two: str):
     if len(word_one) == len(word_two):
-        word_one_letters = letters_in_set(word_one.lower())
-        word_two_letters = letters_in_set(word_two.lower())
-        if (len(word_one_letters.difference(word_two_letters))==0):
+        if sorted(word_one.lower()) == sorted(word_two.lower()):
             return True
         else:
             return False
@@ -111,3 +103,6 @@ check_words("arroz", "rozar")
 check_words("pelo", "gato")
 check_words("anona", "AnonA")
 check_words("perla", "Paler")
+check_words("osO", "Radar")
+check_words("gato", "pelo")
+check_words("aab", "abb")
