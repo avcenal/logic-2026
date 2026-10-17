@@ -111,3 +111,32 @@ print(multiply_ten_correctly(my_other_integer))
     variables originales y las nuevas, comprobando que se ha invertido su valor en las segundas.
     Comprueba también que se ha conservado el valor original en las primeras.
 """
+def my_valor_function(first_parameter: int|float, second_parameter: int|float):
+    temp_parameter = second_parameter
+    second_parameter = first_parameter
+    first_parameter = temp_parameter
+    return(first_parameter,second_parameter)
+
+def my_reference_function(first_parameter: list, second_parameter: list):
+    temp_parameter = second_parameter
+    second_parameter = first_parameter
+    first_parameter = temp_parameter
+    return(first_parameter,second_parameter)
+#esta lógica funciona porque gracias al temporal, guarda el puntero de memoria de la segunda lista
+#si se modificara alguan de las listas incluso el temporal, tendría efecto en el resultado final en los print
+
+first_number = 10
+second_number = 20
+other_first_number, other_second_number = my_valor_function(first_number,second_number)
+print(f"first_number: {first_number}")
+print(f"second_number: {second_number}")
+print(f"other_first_number: {other_first_number}")
+print(f"other_second_number: {other_second_number}")
+
+first_list = [1, 2, 3, 4]
+second_list = [5, 6, 7, 8]
+other_first_list, other_second_list = my_reference_function(first_list, second_list)
+print(f"first_list: {first_list}")
+print(f"second_list: {second_list}")
+print(f"first_list: {other_first_list}")
+print(f"second_list: {other_second_list}")
