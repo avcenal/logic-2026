@@ -123,7 +123,7 @@ def my_reference_function(first_parameter: list, second_parameter: list):
     first_parameter = temp_parameter
     return(first_parameter,second_parameter)
 #esta lógica funciona porque gracias al temporal, guarda el puntero de memoria de la segunda lista
-#si se modificara alguan de las listas incluso el temporal, tendría efecto en el resultado final en los print
+#si se modificara alguna de las listas (con un pop o un append), incluso el temporal, tendría efecto en el resultado final en los print
 
 first_number = 10
 second_number = 20
