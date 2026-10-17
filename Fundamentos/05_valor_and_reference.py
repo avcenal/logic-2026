@@ -71,6 +71,21 @@ print(one_list)
 one_list.append(40)
 print(my_list)
 print(one_list)
+#ambas listas, al ocupar la misma dirección de memoria, cuando se modifican, ambas cambian.
+#es igual con dict, set y TUPLA
+
+#en cambio con tipos de datos básicos como integer:
+int_one = 10
+int_two = int_one
+print(int_one)
+print(int_two)
+int_one += 10
+print(int_one)
+print(int_two)
+int_two =5
+print(int_one)
+print(int_two)
+#int_two apunta a una dirección de memoria diferente de int_one, por eso cuando cambian, no se ven afectados.
 
 #Conclusión: cualquier estructura de datos más allá de los tipos de datos básicos, Python considera que se pasa por referencia
 #es decir, trabaja con la misma posición de memoria de dicho parámetro.
@@ -78,7 +93,7 @@ print(one_list)
 #nota: es posible usar la función "id()" para ver el espacio en memoria con le que se trabaja tanto fuera como dentro de la función
 #esto está hecho en la función que modifica la lista.
 
-#para los tipos de datos básicos, se ha de utilizar return, un ejemplo con el integer. Apuntan al mismo espacio en memoria
+#para los tipos de datos básicos dentro de una función, se ha de utilizar return, un ejemplo con el integer. Apuntan al mismo espacio en memoria
 def multiply_ten_correctly(number: int|float):
     print(id(number))
     return number * 10
