@@ -39,6 +39,7 @@ def fibonacci_position(position:int):
         return fibonacci_position(position - 1) + fibonacci_position(position -2)
 
 print(fibonacci_position(4))
+print(fibonacci_position(6))
 print(fibonacci_position(8))
 
 
