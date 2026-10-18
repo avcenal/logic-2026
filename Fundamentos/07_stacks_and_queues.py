@@ -12,10 +12,17 @@ class Stack:
         self.__stack.append(item)
 
     def pop_stack(self):
-        return self.__stack.pop()
+        try:
+            return self.__stack.pop()
+        except IndexError as error:
+            print(f"La pila está vacía. Error: {error}.")
+        
 
     def top(self):
-        return self.__stack[len(self.__stack)-1]
+        try:
+            return self.__stack[-1]
+        except IndexError as error:
+            print(f"La pila está vacía. Error: {error}.")
 
 class Queue:
     def __init__(self):
@@ -25,10 +32,16 @@ class Queue:
         self.__queue.append(item)
 
     def dequeue(self):
-        return self.__queue.pop(0)
+        try:
+            return self.__queue.pop(0)
+        except IndexError as error:
+            print(f"La cola está vacía. Error: {error}.")
 
     def front(self):
-        return self.__queue[0]
+        try:
+            return self.__queue[0]
+        except IndexError as error:
+            print(f"La cola está vacía. Error: {error}.")
 
 my_stack = Stack()
 my_stack.push(1)
@@ -36,7 +49,9 @@ my_stack.push(3)
 my_stack.push(6)
 print(my_stack.pop_stack())
 print(my_stack.top())
-print(my_stack)
+
+other_stack = Stack()
+print(other_stack.pop_stack())
 
 my_queue = Queue()
 my_queue.enqueue(2)
