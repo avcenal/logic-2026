@@ -87,7 +87,13 @@ La palabra "imprimir" imprime un elemento de la cola, el resto de palabras se in
 """
 from time import sleep
 import re
+
+def check_url(pattern, url) -> int: #evalúa si se cumple el patrón de URL definido. Devuelve 0 en caso de que no se cumpla
+    return len(re.findall(pattern,url))
+
+
 navigation_pattern = r"^((?:adelante|atr[á|a]s)+[\s]*(?!adelante|atr[á|a]s)+(.+))$"
+url_pattern = r"(?:https:\/\/|http:\/\/){0,1}(?:www\.){0,1}[a-zA-Z-_0-9]+(?:\.[a-zA-Z0-9-_]+)(?:\.net|com|es|co|mx){0,1}"
 #print(re.findall(navigation_pattern," www.test.com")[0][1])
 web_browser = Stack()
 option = ""
@@ -100,17 +106,23 @@ while "salir" not in option:
         option = "adelante "
         option += input("introduce la primera web a la que quieres navegar: ")
         if "salir" not in option:
-            web_browser.push(re.findall(navigation_pattern, option)[0][1])
-            print(f"Genial, ahora te encuentras en {web_browser.top()}")
+            if check_url(url_pattern,re.findall(navigation_pattern, option)[0][1]) != 0:
+                web_browser.push(re.findall(navigation_pattern, option)[0][1])
+                print(f"Genial, ahora te encuentras en {web_browser.top()}")
+            else:
+                print("La URL no es válida")
     else:
         option = input("escribe \"adelante\" o \"atrás\" seguido de la web que quieres visitar: ")
         if "adelante" in option:
             try:
-                web_browser.push(re.findall(navigation_pattern, option)[0][1])
-                print(f"Genial, ahora te encuentras en {web_browser.top()}")
+                if check_url(url_pattern,re.findall(navigation_pattern, option)[0][1]) != 0:
+                    web_browser.push(re.findall(navigation_pattern, option)[0][1])
+                    print(f"Genial, ahora te encuentras en {web_browser.top()}")
+                else:
+                    print("La URL no es válida")
             except EmptyStack:
                 print("No hay historial en el navegador.")
-        elif "atrás" in option:
+        elif "atrás" in option or "atras" in option:
             try:
                 web_browser.pop_stack()
                 print(f"Genial, ahora te encuentras en {web_browser.top()}")
@@ -118,4 +130,3 @@ while "salir" not in option:
                 print("No hay historial en el navegador.")
         else:
             print("Tu opción no es válida, ")
-
