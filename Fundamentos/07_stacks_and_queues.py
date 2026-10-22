@@ -103,9 +103,11 @@ while "salir" not in option:
     if web_browser.is_empty():
         print("iniciando...")
         sleep(1)
-        option = "adelante "
+        option = "adelante"
         option += input("introduce la primera web a la que quieres navegar: ")
-        if "salir" not in option:
+        if "atras" in option or "atrás" in option:
+            print("No hay ninguna URL almacenada en el historial.")
+        elif "salir" not in option:
             if check_url(url_pattern,re.findall(navigation_pattern, option)[0][1]) != 0:
                 web_browser.push(re.findall(navigation_pattern, option)[0][1])
                 print(f"Genial, ahora te encuentras en {web_browser.top()}")
