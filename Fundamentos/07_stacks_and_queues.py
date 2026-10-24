@@ -78,12 +78,10 @@ print(my_queue.front())
 #other_queue = Queue() #descomentar estas líneas para provocar EmptyQueue
 #print(other_queue.dequeue())
 """
-* DIFICULTAD EXTRA (opcional):
+* DIFICULTAD EXTRA 1 (opcional):
 *- Utilizando la implementación de pila y cadenas de texto, simula el mecanismo adelante/atrás de un navegador web. Crea un programa en el que puedas navegar a una página o indicarle
 * que te quieres desplazar adelante o atrás, mostrando en cada caso el nombre de la web.
 Las palabras "adelante","atrás" desencadenan esta acción, el resto se interpreta el nombre de una nueva web.
-*- Utilizando la implementación de cola y cadenas de texto, simula el mecanismo de una impresora compartida que recibe documentos y los imprime cuando así se le indica.
-La palabra "imprimir" imprime un elemento de la cola, el resto de palabras se interpretan como nombres de
 """
 from time import sleep
 import re
@@ -104,7 +102,7 @@ while "salir" not in option:
         print("iniciando...")
         sleep(1)
         option = "adelante"
-        option += input("introduce la primera web a la que quieres navegar: ")
+        option += input("introduce la primera web a la que quieres navegar: ").lower()
         if "atras" in option or "atrás" in option:
             print("No hay ninguna URL almacenada en el historial.")
         elif "salir" not in option:
@@ -114,7 +112,7 @@ while "salir" not in option:
             else:
                 print("La URL no es válida")
     else:
-        option = input("escribe \"adelante\" o \"atrás\" seguido de la web que quieres visitar: ")
+        option = input("escribe \"adelante\" o \"atrás\" seguido de la web que quieres visitar: ").lower()
         if "adelante" in option:
             try:
                 if check_url(url_pattern,re.findall(navigation_pattern, option)[0][1]) != 0:
@@ -132,3 +130,23 @@ while "salir" not in option:
                 print("No hay historial en el navegador.")
         else:
             print("Tu opción no es válida, ")
+
+"""
+DIFICULTAD EXTRA 2
+*- Utilizando la implementación de cola y cadenas de texto, simula el mecanismo de una impresora compartida que recibe documentos y los imprime cuando así se le indica.
+La palabra "imprimir" imprime un elemento de la cola, el resto de palabras se interpretan como nombres de archivo.
+"""
+my_printer = Queue()
+printer_input = ""
+print("###################################################")
+print("Te doy la bienvenida al sistema de impresión de avcenal.dev\n\nInstrucciones:\n- Para enviar un archivo a la cola de impresión basta con que escribas su nombre.\n- Al escribir \"imprimir\" se imprimirá el primer documento en la cola de impresión.\n- Para salir escribe simplemente \"salir\"\n")
+while printer_input != "salir":
+    printer_input = input("¿Qué deseas hacer?: ").lower()
+    if "imprimir" in printer_input:
+        try:
+            print(f"Imprimiendo el archivo {my_printer.dequeue()}")
+        except EmptyQueue:
+            print("La cola de impresión está vacía")
+    else:
+        print(f"Guardando en la cola de impresión el archivo {printer_input}")
+        my_printer.enqueue(printer_input)
