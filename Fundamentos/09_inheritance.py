@@ -71,10 +71,21 @@ class Empleado():
         return False
 
 class Programador(Empleado):
-    def __init__(self, name:str, id: int,languages:list):
+    def __init__(self, name:str, id: int,languages:list, project: str = None):
         super().__init__(name, id)
-        self.project = None
+        """if projects is None:
+            self.projects = []
+        else:
+            self.projects = projects"""
+        self.project = project
         self.languages = languages
+
+    def show_info(self):
+        print("PROGRAMADOR")
+        print(f"- Nombre: {self.name}\n- Id: {self.id}\nLenguajes:\n")
+        for index,language in enumerate(self.languages):
+            print(f"{index + 1}. {language}\n")
+        print(f"Projecto: {self.project}\n")
 
     def develop_feature(self):
         print("Desarrollando feature")
@@ -96,9 +107,10 @@ class Gerente(Empleado):
 
     def show_info(self):
         if len(self.team) != 0:
+            print("GERENTE")
             print(f"- Nombre: {self.name}\n- Id: {self.id}\n- Departamento: {self.department}\n- Equipo:\n")
             for index,employee in enumerate(self.team):
-                print(f"{index}. {employee.name} - {employee.__class__.__name__}\n")
+                print(f"{index + 1}. {employee.name} - {employee.__class__.__name__}\n")
         else: 
             print(f"No hay empleados en el equipo de {self.name}")
     
@@ -136,8 +148,25 @@ class GerenteDeProyectos(Empleado):
         else:
             self.projects = projects
 
+    def show_info(self):
+        print("GERENTE DE PROYECTOS")
+        print(f"- Nombre: {self.name}\n- Id: {self.id}\n- Proyectos:\n")
+        for index,project in enumerate(self.projects):
+            print(f"{index + 1}. {project}\n")
+        print("- Equipo:\n")
+        for index, developer in enumerate(self.team):
+            print(f"{index + 1}. {developer.name} - {developer.__class__.__name__}\n")
+
     def assign_project(self,developer: Programador, project: str):
-        developer.project = project
+        if developer.project is None:
+            developer.project = project
+        else:
+            print(f"Este desarrollador ya tiene un proyecto asignado")
+        if project not in self.projects:
+            self.projects.append(project)
+        else:
+            print("El Project Manager ya está trabajando en este proyecto")
+            
         if not self._check_existing_exmployee(developer.id, self.team):
             self.team.append(developer)
 
@@ -152,11 +181,27 @@ class GerenteDeProyectos(Empleado):
         print(self.projects)
 
 manager = Gerente("Alex",123,"Growth")
-manager2 = Gerente("Test", 987,"Tech")
+project_manager = GerenteDeProyectos("Sole",456)
+developer = Programador("Martin",789,["Python","Javascript"])
+
+#acciones de Gerente
 manager.show_info()
-manager.hire_employee(GerenteDeProyectos("Sole",456))
-manager.hire_employee(Programador("Martin",789,["Python","Javascript"]))
+manager.hire_employee(project_manager)
+manager.hire_employee(developer)
 manager.show_info()
-manager.hire_employee(GerenteDeProyectos("Sole",456))
+
+#acciones de GerenteDeProyectos
+project_manager.assign_project(developer, "WABA Flow feature")
+project_manager.show_info()
+
+#comprobación que el programador tiene asignado el proyecto que le ha asignado el Project Manager
+developer.show_info()
+
+#el project manager desasigna el proyecto del programador indicado
+project_manager.unassign_project(developer)
+project_manager.show_info()
+developer.show_info()
+
+#comprobación de que no se aceptan duplicados, en este caso en gerente
+manager.hire_employee(project_manager)
 manager.show_info()
-manager2.show_info()
