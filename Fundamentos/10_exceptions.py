@@ -42,7 +42,8 @@ try:
 except AttributeError as error:
     print(f"Parece que \"my_int\" al ser integer no tiene función \"reverse\"")
 
-"""my_other_int = 0
+#líneas comentadas para que continúe el programa
+"""my_other_int = 0 
 if my_other_int == 0:
     raise ZeroDivisionError ("Cudidado, \"my_other_int\" es cero")"""
 
@@ -73,8 +74,8 @@ def my_function():
             except ValueError as error:
                         print("debes elegir un número")
             else:
-                if (second_int <= 0):
-                    raise SecondIntegerIsZeroOrNegative
+                if (second_int <= 0): #al hacer un raise, se interrumpe el programa
+                    raise SecondIntegerIsZeroOrNegative #se resolvería con un try/except de ZeroDivisionError
                 else:
                     print(first_int / second_int)
                     print("no se ha prodducido ningún error")
